@@ -687,31 +687,33 @@
                     lang: currentLang
                 };
                 
-                // Envoyer à la fonction Netlify
+                // Détecter si on est sur Netlify (API disponible)
+                const isNetlify = window.location.hostname.includes('netlify');
                 let saved = false;
-                try {
-                    const response = await fetch('/api/add-source', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        saved = result.success;
-                        console.log('✅ Soumis via API:', result);
+                
+                if (isNetlify) {
+                    try {
+                        const response = await fetch('/api/add-source', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        if (response.ok) {
+                            const result = await response.json();
+                            saved = result.success;
+                            console.log('✅ Soumis via API:', result);
+                        }
+                    } catch (apiError) {
+                        console.warn('API non disponible');
                     }
-                } catch (apiError) {
-                    console.warn('API non disponible, fallback localStorage');
                 }
                 
-                // Fallback: localStorage si API non disponible
-                if (!saved) {
-                    const existing = JSON.parse(localStorage.getItem('proto-sites-to-scan') || '{"sites":[]}');
-                    existing.sites.push({ ...payload, date: new Date().toISOString() });
-                    localStorage.setItem('proto-sites-to-scan', JSON.stringify(existing));
-                    console.log('📝 Sauvé en local:', payload);
-                }
+                // Sauvegarde locale (toujours, pour backup)
+                const existing = JSON.parse(localStorage.getItem('sites-to-scan') || '{"sites":[]}');
+                existing.sites.push({ ...payload, date: new Date().toISOString() });
+                localStorage.setItem('sites-to-scan', JSON.stringify(existing));
+                if (!saved) console.log('📝 Sauvé en local:', payload);
                 
                 successMessage.classList.add('visible');
                 form.reset();
