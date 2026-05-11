@@ -181,7 +181,7 @@ GDPR-Public-Life/
 ### 🆕 Nouvelles Fonctionnalités
 
 #### 📅 Page Événements (`events.html`)
-- Charge **158+ événements** depuis [GitHub events100redes](https://github.com/PapooLePapoo/events100redes)
+- Charge **158+ événements** depuis [GitHub events100redes](https://github.com/100redes/GDPR-Public-Life)
 - Filtres par ville, catégorie, date, prix
 - Affichage en grille responsive
 - Modale de détail sans redirection externe
